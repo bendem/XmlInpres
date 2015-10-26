@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "mcd-small-ns.dtd">
+<schema xmlns="https://ns.bendem.be/mcd-small">
+    <entity>
+        <name>City</name>
+        <attribute primary="true">name</attribute>
+        <attribute>population</attribute>
+    </entity>
+
+    <entity>
+        <name>Person</name>
+        <attribute primary="true">name</attribute>
+        <attribute>birth</attribute>
+    </entity>
+
+    <relation
+            from="city"
+            to="person"
+            from-cardinality="0-n"
+            to-cardinality="1-n">
+        <name>lives</name>
+        <relattr>since</relattr>
+    </relation>
+</schema>

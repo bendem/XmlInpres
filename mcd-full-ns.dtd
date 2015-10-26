@@ -1,0 +1,21 @@
+<!ELEMENT schema (entity*, relation*)>
+<!ATTLIST schema xmlns CDATA #FIXED "https://ns.bendem.be/mcd-small">
+<!ELEMENT entity (name, attribute+)>
+<!ATTLIST entity
+    inherit-from CDATA #IMPLIED
+    inheritance-type CDATA #IMPLIED>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT attribute (name, attribute*)>
+<!ATTLIST attribute
+    primary CDATA #FIXED "true"
+    optional CDATA #FIXED "true"
+    multiple CDATA #FIXED "true">
+
+<!ELEMENT relation (name, from, to, relattr*)>
+<!ELEMENT from (entity-name, cardinality, comment?)>
+<!ELEMENT to (entity-name, cardinality, comment?)>
+<!ELEMENT entity-name (#PCDATA)>
+<!ELEMENT cardinality (#PCDATA)>
+<!ELEMENT comment (#PCDATA)>
+<!ELEMENT relattr (#PCDATA)>
+<!ATTLIST relattr optional CDATA #FIXED "true">

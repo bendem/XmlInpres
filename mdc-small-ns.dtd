@@ -1,0 +1,14 @@
+<!ELEMENT schema (entity*, relation*)>
+<!ATTLIST schema xmlns CDATA #FIXED "https://ns.bendem.be/mcd-small">
+<!ELEMENT entity (name, attribute+)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT attribute (#PCDATA)>
+<!ATTLIST attribute primary CDATA #FIXED "true">
+
+<!ELEMENT relation (name, relattr*)>
+<!ATTLIST relation
+    from CDATA #REQUIRED
+    to CDATA #REQUIRED
+    from-cardinality CDATA #REQUIRED
+    to-cardinality CDATA #REQUIRED>
+<!ELEMENT relattr (#PCDATA)>

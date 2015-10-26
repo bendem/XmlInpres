@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "mcd-full-ns.dtd">
+<schema xmlns="https://ns.bendem.be/mcd-small">
+    <entity>
+        <name>objet</name>
+        <attribute primary="true">
+            <name>id</name>
+        </attribute>
+        <attribute optional="true">
+            <name>acquisition</name>
+        </attribute>
+    </entity>
+
+    <entity>
+        <name>local</name>
+        <attribute primary="true">
+            <name>nom</name>
+        </attribute>
+        <attribute optional="true">
+            <name>taille</name>
+        </attribute>
+    </entity>
+
+    <entity inherit-from="objet" inheritance-type="p">
+        <name>livre</name>
+        <attribute primary="true">
+            <name>isbn</name>
+        </attribute>
+        <attribute>
+            <name>titre</name>
+        </attribute>
+    </entity>
+
+    <entity inherit-from="objet" inheritance-type="p">
+        <name>film</name>
+        <attribute>
+            <name>titre</name>
+        </attribute>
+        <attribute optional="true">
+            <name>support</name>
+        </attribute>
+        <attribute optional="true">
+            <name>durée</name>
+        </attribute>
+    </entity>
+
+    <entity>
+        <name>copie</name>
+        <attribute>
+            <name>num</name>
+        </attribute>
+        <attribute>
+            <name>audio</name>
+        </attribute>
+        <attribute>
+            <name>sous_titre</name>
+        </attribute>
+    </entity>
+
+    <entity>
+        <name>personne</name>
+        <attribute primary="true">
+            <name>nom</name>
+        </attribute>
+        <attribute multiple="true">
+            <name>prénom</name>
+        </attribute>
+        <attribute>
+            <name>adresse</name>
+            <attribute>
+                <name>rue</name>
+            </attribute>
+            <attribute>
+                <name>ville</name>
+            </attribute>
+            <attribute>
+                <name>code_postal</name>
+            </attribute>
+        </attribute>
+        <attribute multiple="true">
+            <name>comptes</name>
+            <attribute>
+                <name>bic</name>
+            </attribute>
+            <attribute>
+                <name>iban</name>
+            </attribute>
+        </attribute>
+    </entity>
+
+    <relation>
+        <name>se_trouve_dans</name>
+        <from>
+            <entity-name>objet</entity-name>
+            <cardinality>1-1</cardinality>
+        </from>
+        <to>
+            <entity-name>local</entity-name>
+            <cardinality>0-n</cardinality>
+        </to>
+    </relation>
+
+    <relation>
+        <name>est_la_copie_de</name>
+        <from>
+            <entity-name>film</entity-name>
+            <cardinality>0-n</cardinality>
+        </from>
+        <to>
+            <entity-name>copie</entity-name>
+            <cardinality>1-1</cardinality>
+        </to>
+    </relation>
+
+    <relation>
+        <name>a_réalisé</name>
+        <from>
+            <entity-name>film</entity-name>
+            <cardinality>1-n</cardinality>
+        </from>
+        <to>
+            <entity-name>personne</entity-name>
+            <cardinality>0-n</cardinality>
+            <comment>réalisateur</comment>
+        </to>
+    </relation>
+
+    <relation>
+        <name>a_écrit</name>
+        <from>
+            <entity-name>livre</entity-name>
+            <cardinality>1-n</cardinality>
+        </from>
+        <to>
+            <entity-name>personne</entity-name>
+            <cardinality>0-n</cardinality>
+            <comment>auteur</comment>
+        </to>
+        <relattr optional="true">quand</relattr>
+    </relation>
+</schema>
