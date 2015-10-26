@@ -6,6 +6,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -105,6 +106,11 @@ public class SaxParsing {
             System.out.println("No xml to read");
             return;
         }
-        System.out.println(new SaxParsing(args[0]).parse());
+        String parsed = new SaxParsing(args[0]).parse();
+        System.out.println(parsed);
+        Files.newBufferedWriter(
+            Paths.get(args[0].replace(".xml", ".txt")),
+            StandardCharsets.UTF_8
+        ).write(parsed);
     }
 }
