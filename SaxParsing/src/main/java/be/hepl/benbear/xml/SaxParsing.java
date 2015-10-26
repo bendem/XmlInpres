@@ -5,6 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -108,9 +109,11 @@ public class SaxParsing {
         }
         String parsed = new SaxParsing(args[0]).parse();
         System.out.println(parsed);
-        Files.newBufferedWriter(
+        try(BufferedWriter writer = Files.newBufferedWriter(
             Paths.get(args[0].replace(".xml", ".txt")),
             StandardCharsets.UTF_8
-        ).write(parsed);
+        )) {
+            writer.write(parsed);
+        }
     }
 }
