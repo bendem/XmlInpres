@@ -7,9 +7,9 @@
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT attribute (name, attribute*)>
 <!ATTLIST attribute
-    primary CDATA #FIXED "true"
-    optional CDATA #FIXED "true"
-    multiple CDATA #FIXED "true">
+    primary (true) #IMPLIED
+    optional (true) #IMPLIED
+    multiple (true) #IMPLIED>
 
 <!ELEMENT relation (name, from, to, relattr*)>
 <!ELEMENT from (entity-name, cardinality, comment?)>
@@ -18,4 +18,4 @@
 <!ELEMENT cardinality (#PCDATA)>
 <!ELEMENT comment (#PCDATA)>
 <!ELEMENT relattr (#PCDATA)>
-<!ATTLIST relattr optional CDATA #FIXED "true">
+<!ATTLIST relattr optional (true) #IMPLIED>

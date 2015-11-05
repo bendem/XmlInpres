@@ -2,7 +2,7 @@
 <!ELEMENT entity (name, attribute+)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT attribute (#PCDATA)>
-<!ATTLIST attribute primary CDATA #FIXED "true">
+<!ATTLIST attribute primary (true) #IMPLIED>
 
 <!ELEMENT relation (name, relattr*)>
 <!ATTLIST relation
