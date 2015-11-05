@@ -141,13 +141,13 @@ public class DomParsing {
                             f
                                 .create("from")
                                 .appendChild(f.create("entity-name", entityName))
-                                .appendChild(f.create("cardinality", "1-n")) // TODO Check this value
+                                .appendChild(f.create("cardinality", "1-n"))
                         )
                         .appendChild(
                             f
                                 .create("to")
                                 .appendChild(f.create("entity-name", entityName + '_' + attributeName))
-                                .appendChild(f.create("cardinality", "1-1")) // TODO Check this value
+                                .appendChild(f.create("cardinality", "1-1"))
                         )
                 );
         }
