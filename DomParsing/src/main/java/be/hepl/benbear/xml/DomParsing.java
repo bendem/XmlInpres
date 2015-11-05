@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,35 +47,76 @@ public class DomParsing {
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = domFactory.newDocumentBuilder();
         Document document = documentBuilder.parse(Files.newInputStream(file));
+
         NodeFactory f = new NodeFactory(document);
         NodeUtil root = f.getByName("schema").get(0);
 
-        List<NodeUtil> attributes;
-        while(true) {
-            attributes = f.getByName("attribute");
-            NodeUtil item = null;
-            for(NodeUtil attribute : attributes) {
-                if(attribute.getAttribute("multiple").isPresent()) {
-                    item = attribute;
-                    break;
-                }
-            }
+        flattenCompoundValues(f, root);
+        extractMultiValues(f, root);
+        documentToXml(document);
+    }
 
-            if(item == null) {
+    private void flattenCompoundValues(NodeFactory f, NodeUtil root) {
+        while(true) {
+            Optional<NodeUtil> item = f.getByName("attribute").stream()
+                .filter(att -> att.closestParent("attribute").isPresent())
+                .findFirst();
+
+            if(!item.isPresent()) {
                 break;
             }
 
-            NodeUtil entity = item.closestParent("entity").get();
-            String entityName = entity
+            NodeUtil entity = item.get().closestParent("entity").get();
+            NodeUtil attr = item.get().closestParent("attribute").get();
+            String attrName = attr.closestChild("name").get().getTextContent();
+
+            System.out.println("(MULIVALUE) "
+                + entity.closestChild("name").get().getTextContent()
+                + ": " + attrName
+                + " / " + item.get().closestChild("name").get().getTextContent());
+
+            attr.getChildNodes().stream()
+                .filter(sub -> sub.getNodeName().equals("attribute"))
+                .forEach(sub -> {
+                    NodeUtil cloned = sub.cloneNode(true);
+
+                    NodeUtil subName = cloned.closestChild("name").get();
+                    subName.setTextContent(attrName + '_' + subName.getTextContent());
+
+                    NamedNodeMap nodeAttributes = attr.getAttributes();
+                    for(int i = 0; i < nodeAttributes.getLength(); i++) {
+                        cloned.getAttributes().setNamedItem(nodeAttributes.item(i).cloneNode(false));
+                    }
+
+                    entity.appendChild(cloned);
+                });
+            entity.removeChild(attr);
+        }
+    }
+
+    private void extractMultiValues(NodeFactory f, NodeUtil root) {
+        while(true) {
+            Optional<NodeUtil> item = f.getByName("attribute").stream()
+                .filter(att -> att.getAttribute("multiple").isPresent())
+                .findFirst();
+
+            if(!item.isPresent()) {
+                break;
+            }
+
+            NodeUtil attr = item.get();
+            String entityName = attr
+                .closestParent("entity").get()
                 .closestChild("name").get()
                 .getTextContent();
-            String attributeName = item.closestChild("name").get()
+            String attributeName = attr
+                .closestChild("name").get()
                 .getTextContent();
 
-            System.out.println("(MULTIPLE) " + entityName + ": " + item.closestChild("name").get().getTextContent());
+            System.out.println("(MULTIPLE) " + entityName + ": " + attr.closestChild("name").get().getTextContent());
 
             // Not multiple anymore
-            item.getAttributes().removeNamedItem("multiple");
+            attr.getAttributes().removeNamedItem("multiple");
 
             root
                 .appendChild(
@@ -89,7 +130,7 @@ public class DomParsing {
                                 .setAttribute(f, "primary", "true")
                                 .appendChild(f.create("name", "id"))
                         )
-                        .appendChild(item.cloneNode(true))
+                        .appendChild(attr.cloneNode(true))
                 )
                 .appendChild(
                     // Create the relation
@@ -110,34 +151,6 @@ public class DomParsing {
                         )
                 );
         }
-
-        /*
-            if(!item.closestParent("attribute").isPresent()) {
-                continue;
-            }
-
-            System.out.println("(MULIVALUE) " + entity
-                .closestChild("name").get()
-                .getTextContent() + ": " + item.closestChild("name").get().getTextContent()
-                + " / " + item.closestParent("attribute").get().closestChild("name").get().getTextContent());
-            for(NodeUtil subItem : item.getChildNodes()) {
-                if(!subItem.getNodeName().equals("attribute")) {
-                    continue;
-                }
-
-                // TODO Convert multi attribute node
-                //entity.appendChild(
-                //    f
-                //        .create("attribute")
-                //        .appendChild(f.create("name", item.getNo))
-                //);
-
-                // Cleanup
-                entity.removeChild(item.node);
-            }
-        }*/
-
-        documentToXml(document);
     }
 
     private void documentToXml(Document document) throws TransformerException, IOException {

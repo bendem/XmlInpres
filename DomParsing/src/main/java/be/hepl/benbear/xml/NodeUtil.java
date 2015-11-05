@@ -58,6 +58,11 @@ public class NodeUtil {
         return this;
     }
 
+    public NodeUtil removeChild(NodeUtil node) {
+        removeChild(node.node);
+        return this;
+    }
+
     public Optional<String> getAttribute(String name) {
         NamedNodeMap attributes = getAttributes();
         Node item;
