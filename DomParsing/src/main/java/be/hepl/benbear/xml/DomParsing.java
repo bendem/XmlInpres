@@ -31,18 +31,6 @@ public class DomParsing {
         this.out = out;
     }
 
-    private String attrToString(NodeUtil node) {
-        NamedNodeMap attributes = node.getAttributes();
-        StringBuilder builder = new StringBuilder().append('{');
-        for(int i = 0; i < attributes.getLength(); i++) {
-            builder.append(attributes.item(i));
-            if(i != attributes.getLength() - 1) {
-                builder.append(", ");
-            }
-        }
-        return builder.append('}').toString();
-    }
-
     private void parse() throws Exception {
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = domFactory.newDocumentBuilder();
