@@ -1,3 +1,7 @@
+SaxParsing/*.dtd
+DomParsing/*.dtd
 .gradle
 .idea
 build
+*_mod.xml
+*.txt
