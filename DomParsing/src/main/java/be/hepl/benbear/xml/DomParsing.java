@@ -39,12 +39,12 @@ public class DomParsing {
         NodeFactory f = new NodeFactory(document);
         NodeUtil root = f.getByName("schema").get(0);
 
-        flattenCompoundValues(f, root);
+        flattenCompoundValues(f);
         extractMultiValues(f, root);
         documentToXml(document);
     }
 
-    private void flattenCompoundValues(NodeFactory f, NodeUtil root) {
+    private void flattenCompoundValues(NodeFactory f) {
         while(true) {
             Optional<NodeUtil> item = f.getByName("attribute").stream()
                 .filter(att -> att.closestParent("attribute").isPresent())
