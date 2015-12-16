@@ -93,8 +93,9 @@ public class DomParsing {
             }
 
             NodeUtil attr = item.get();
-            String entityName = attr
-                .closestParent("entity").get()
+            NodeUtil entity = attr
+                .closestParent("entity").get();
+            String entityName = entity
                 .closestChild("name").get()
                 .getTextContent();
             String attributeName = attr
@@ -138,6 +139,7 @@ public class DomParsing {
                                 .appendChild(f.create("cardinality", "1-1"))
                         )
                 );
+            entity.removeChild(attr);
         }
     }
 
