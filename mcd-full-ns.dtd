@@ -1,4 +1,4 @@
-<!ELEMENT schema (entity*, relation*)>
+<!ELEMENT schema (entity|relation)*>
 <!ATTLIST schema xmlns CDATA #FIXED "https://ns.bendem.be/mcd-small">
 <!ELEMENT entity (name, attribute+)>
 <!ATTLIST entity
